@@ -43,15 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function Funcion_Grosor_Color(x, y) {
         var halfThickness = Math.floor(GrosorTrazos / 2);
-
-        for (var i = -halfThickness; i <= halfThickness; i++) {
-            for (var j = -halfThickness; j <= halfThickness; j++) {
-                ctx.fillStyle = ColorTrazos;
-                ctx.fillRect(x + i, y + j, 1, 1);
-            }
-        }
-    }
-
+        ctx.fillStyle = ColorTrazos;
+        ctx.fillRect(x - halfThickness, y - halfThickness, GrosorTrazos, GrosorTrazos);
+    }    
 
     canvas.addEventListener("mousemove", function (event) {
         if (ModosDisp.includes(Modo)) {
@@ -76,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 PuntoInicio = obtenerCoordenadas(event);
             } else {
                 PuntoFinal = obtenerCoordenadas(event);
-                Algoritmo(PuntoInicio, PuntoFinal);
+                Algoritmo3(PuntoInicio, PuntoFinal);
                 PuntoInicio = null;
                 PuntoFinal = null;
             }
@@ -87,6 +81,16 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 PuntoFinal = obtenerCoordenadas(event);
                 CuadradoDibujo(PuntoInicio, PuntoFinal);
+                PuntoInicio = null;
+                PuntoFinal = null;
+            }
+        }else if(Modo === "Circulo"){
+            if (!PuntoInicio) {
+                PuntoInicio = obtenerCoordenadas(event);
+            } else {
+                PuntoFinal = obtenerCoordenadas(event);
+                var radio = Math.sqrt(Math.pow(PuntoFinal.x - PuntoInicio.x, 2) + Math.pow(PuntoFinal.y - PuntoInicio.y, 2));
+                BresenhamCircle(PuntoInicio, radio);
                 PuntoInicio = null;
                 PuntoFinal = null;
             }
@@ -254,4 +258,37 @@ document.addEventListener("DOMContentLoaded", function () {
         Algoritmo3(cuadradoEnd, { x: cuadradoStart.x, y: cuadradoEnd.y });
         Algoritmo3({ x: cuadradoStart.x, y: cuadradoEnd.y }, cuadradoStart);
     }
+
+    //funcion para dibujar un circulo con bresenham
+
+    function BresenhamCircle(centro, radio) {
+        console.log(centro, radio);
+        var x = radio;
+        var y = 0;
+        var P = 1 - radio; // parametro de desicion
+    
+        function dibujarPuntos(centroX, centroY, x, y) {
+            Funcion_Grosor_Color(centroX + x, centroY + y);
+            Funcion_Grosor_Color(centroX - x, centroY + y);
+            Funcion_Grosor_Color(centroX + x, centroY - y);
+            Funcion_Grosor_Color(centroX - x, centroY - y);
+            Funcion_Grosor_Color(centroX + y, centroY + x);
+            Funcion_Grosor_Color(centroX - y, centroY + x);
+            Funcion_Grosor_Color(centroX + y, centroY - x);
+            Funcion_Grosor_Color(centroX - y, centroY - x);
+        }
+    
+        while (x >= y) {
+            dibujarPuntos(centro.x, centro.y, x, y);
+    
+            y = y + 1;
+            if (P <= 0) {
+                P = P + 2 * y + 3;
+            } else {
+                P = P + 2 * (y - x) + 5;
+                x = x - 1;
+            }
+        }
+    }
+    
 });
