@@ -95,6 +95,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 PuntoFinal = null;
             }
 
+        }else if (Modo === "Trigonometrico"){
+
+            var numLados = parseInt(document.getElementById("TrigonometricoN").value);
+
+            if (!PuntoInicio) {
+                PuntoInicio = obtenerCoordenadas(event);
+            } else {
+                PuntoFinal = obtenerCoordenadas(event);
+                var radio = Math.sqrt(Math.pow(PuntoFinal.x - PuntoInicio.x, 2) + Math.pow(PuntoFinal.y - PuntoInicio.y, 2));
+                var grados = 360 / numLados;
+                TrigonometricoCircle(grados, numLados);
+                PuntoInicio = null;
+                PuntoFinal = null;
+            }
+
         } else if (ModosDisp.includes(Modo)) {
             if (Modo === "lapiz" || Modo === "borrar") {
                 ctx.beginPath();
@@ -290,5 +305,32 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
+
+    function TrigonometricoCircle(grados, numLados) {
+        var centro = PuntoInicio;
+        var radio = Math.sqrt(Math.pow(PuntoFinal.x - PuntoInicio.x, 2) + Math.pow(PuntoFinal.y - PuntoInicio.y, 2));
+
+        if (numLados > 2) {
+            // Calcular las coordenadas de los puntos
+            var puntos = [];
+            for (var k = 0; k < numLados; k++) {
+                var x = centro.x + radio * Math.cos(grados * k * Math.PI / 180);
+                var y = centro.y + radio * Math.sin(grados * k * Math.PI / 180);
+                puntos.push({ x: x, y: y });
+            }
     
+            // Dibujar las líneas que conectan los puntos
+            for (var i = 0; i < puntos.length; i++) {
+                var puntoActual = puntos[i];
+                var puntoSiguiente = puntos[(i + 1) % puntos.length]; // Conectar con el siguiente punto o con el primero si es el último
+                ctx.beginPath();
+                ctx.moveTo(puntoActual.x, puntoActual.y);
+                ctx.lineTo(puntoSiguiente.x, puntoSiguiente.y);
+                ctx.stroke();
+            }
+        }else{
+            alert("El numero de lados debe ser mayor a 2");
+        }
+    }    
+
 });

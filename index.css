@@ -41,4 +41,20 @@ body {
     background: linear-gradient(to bottom right, #2c3e50, #34495e); /* Cambio de colores en el fondo */
 }
 
-/* Fin del nuevo CSS */
+#TrigonometricoD button {
+    background-color: #838d84; /* Color de fondo verde */
+    border: none; /* Sin borde */
+    color: white; /* Color de texto blanco */
+    padding: 10px 20px; /* Espaciado interno */
+    text-align: center; /* Alinear texto al centro */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-block; /* Mostrar como elemento en línea */
+    font-size: 16px; /* Tamaño de fuente */
+    margin: 4px 2px; /* Margen externo */
+    cursor: pointer; /* Cambiar cursor a mano al pasar sobre el botón */
+    border-radius: 8px; /* Borde redondeado */
+}
+
+#TrigonometricoD button:hover {
+    background-color: #86e08b; /* Cambiar color de fondo al pasar el mouse */
+}
