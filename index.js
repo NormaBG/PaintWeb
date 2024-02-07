@@ -4,11 +4,6 @@ var PuntoFinal = null;
 var ctx; 
 var Modo = "";
 
-
-var ColorTrazos = "#000000";
-var GrosorTrazos = 2;
-
-
 function CambiarModo(NuevoModo) {
     Modo = NuevoModo;
     PuntoInicio = null;
@@ -34,13 +29,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //Obtener las cordenadas del cursor
     function obtenerCoordenadas(event) {
+        // Actualizar el color de trazo desde el elemento HTML
+        ColorTrazos = document.getElementById("ColorTrazos").value;
+        GrosorTrazos = document.getElementById("GrosorTrazos").value;
+    
+        // Aplicar el color de trazo al contexto del lienzo
+        ctx.strokeStyle = ColorTrazos;
+    
         var rect = canvas.getBoundingClientRect();
         return {
             x: event.clientX - rect.left,
             y: event.clientY - rect.top
         };
     }
-
     function Funcion_Grosor_Color(x, y) {
         var halfThickness = Math.floor(GrosorTrazos / 2);
         ctx.fillStyle = ColorTrazos;
@@ -109,7 +110,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 PuntoInicio = null;
                 PuntoFinal = null;
             }
-
+        }else if(Modo === "Elipse"){
+            if (!PuntoInicio) {
+                PuntoInicio = obtenerCoordenadas(event);
+            } else {
+                PuntoFinal = obtenerCoordenadas(event);
+                var radioX = Math.abs(PuntoFinal.x - PuntoInicio.x);
+                var radioY = Math.abs(PuntoFinal.y - PuntoInicio.y);
+                Ellipse(PuntoInicio, radioX, radioY);
+                PuntoInicio = null;
+                PuntoFinal = null;
+            }
+        }else if(Modo === "Rellenar"){
+            //rellenar las figuras con color
         } else if (ModosDisp.includes(Modo)) {
             if (Modo === "lapiz" || Modo === "borrar") {
                 ctx.beginPath();
@@ -331,6 +344,47 @@ document.addEventListener("DOMContentLoaded", function () {
         }else{
             alert("El numero de lados debe ser mayor a 2");
         }
-    }    
+    }
 
+    //funcion para dibujar una elipse
+    function Ellipse(centro, radioX, radioY) {
+        var x = 0;
+        var y = radioY;
+        var d = Math.pow(radioY, 2) - Math.pow(radioX, 2) * radioY + 0.25 * Math.pow(radioX, 2);
+        var radioX2 = Math.pow(radioX, 2);
+        var radioY2 = Math.pow(radioY, 2);
+    
+        function dibujarPuntos(centroX, centroY, x, y) {
+            Funcion_Grosor_Color(centroX + x, centroY + y);
+            Funcion_Grosor_Color(centroX - x, centroY + y);
+            Funcion_Grosor_Color(centroX + x, centroY - y);
+            Funcion_Grosor_Color(centroX - x, centroY - y);
+        }
+    
+        while (radioX2 * (y - 0.5) > radioY2 * (x + 1)) {
+            dibujarPuntos(centro.x, centro.y, x, y);
+    
+            if (d < 0) {
+                d += radioY2 * (2 * x + 3);
+            } else {
+                d += radioY2 * (2 * x + 3) + radioX2 * (-2 * y + 2);
+                y--;
+            }
+            x++;
+        }
+    
+        d = radioY2 * (Math.pow(x + 0.5, 2)) + radioX2 * (Math.pow(y - 1, 2) - radioX2 * radioY2);
+    
+        while (y >= 0) {
+            dibujarPuntos(centro.x, centro.y, x, y);
+    
+            if (d < 0) {
+                d += radioY2 * (2 * x + 2) + radioX2 * (-2 * y + 3);
+                x++;
+            } else {
+                d += radioX2 * (-2 * y + 3);
+            }
+            y--;
+        }
+    }
 });

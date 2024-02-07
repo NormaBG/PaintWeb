@@ -33,6 +33,22 @@
                 <input type="number" id="TrigonometricoN" name="TrigonometricoN"><br><br>
                 <button type="button" onclick="CambiarModo('Trigonometrico')">Dibujar</button>
             </div>
+            <!-- Elipse -->
+            <div class="tool" id="Elipse">
+                <img src="img/Elipsse.jpg" onclick="CambiarModo('Elipse')"  alt="Elipse">
+            </div>
+           <!-- Color -->
+            <div class="tool" id="color">
+                <input type="color" id="ColorTrazos" name="ColorTrazos">
+            </div>
+            <!-- Grosor -->
+            <div class="tool" id="grosor">
+                <input id="GrosorTrazos" class="range" type="range" id="grosor" min="1" max="10" value="1">
+            </div>
+            <!--Rellenar-->
+            <div class="tool" id="rellenar">
+                <img src="img/paint.png" onclick="CambiarModo('rellenar')"  alt="rellenar">
+            </div>
         </div>
 
         <canvas id="myCanvas" class="canvas"></canvas>
