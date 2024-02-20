@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var area1 = { startX: 50, startY: 50, width: canvas.width, height: canvas.height };
     var area2 = { startX: 250, startY: 250, width: canvas.width, height: canvas.height };
 
-
     // Configurar color y grosor iniciales
     ctx.strokeStyle = ColorTrazos;
     ctx.lineWidth = GrosorTrazos;
@@ -122,22 +121,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 PuntoFinal = null;
             }
         }else if(Modo === "rellenar"){
+
             var x = event.offsetX;
             var y = event.offsetY;
 
-            if (x >= area1.startX && x <= area1.startX + area1.width &&
-                y >= area1.startY && y <= area1.startY + area1.height) {
-                var fillColor = hexToRgb(document.getElementById("relleno").value);
-                var targetColor = getColorAtPixel(area1.startX, area1.startY);
-                floodFill(area1.startX, area1.startY, targetColor, fillColor);
-            }
+            var fillColor = hexToRgb(document.getElementById("relleno").value);
+            var targetColor = getColorAtPixel(x, y);
 
-            if (x >= area2.startX && x <= area2.startX + area2.width &&
-                y >= area2.startY && y <= area2.startY + area2.height) {
-                var fillColor = hexToRgb(document.getElementById("relleno").value);
-                var targetColor = getColorAtPixel(area2.startX, area2.startY);
-                floodFill(area2.startX, area2.startY, targetColor, fillColor);
-            }
+            floodFill(x, y, targetColor, fillColor);
+            
         } else if (ModosDisp.includes(Modo)) {
             if (Modo === "lapiz" || Modo === "borrar") {
                 ctx.beginPath();
@@ -411,86 +403,86 @@ document.addEventListener("DOMContentLoaded", function () {
         return [data[0], data[1], data[2], data[3]]; // RGBA
     }
 
-    function floodFill(startX, startY, targetColor, fillColor) {
-        if (targetColor.toString() === fillColor.toString()) {
-            console.log("El pixel de inicio ya es del color de relleno deseado.");
-            return;
-        }
-
-        var stack = [[startX, startY]];
-        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        var pixels = imageData.data;
-        var width = canvas.width;
-        var height = canvas.height;
-
-        var getColorIndex = function(x, y) {
-            return (y * width + x) * 4;
-        };
-
-        var isSameColor = function(pixelPos) {
-            return (
-                pixels[pixelPos] === targetColor[0] &&
-                pixels[pixelPos + 1] === targetColor[1] &&
-                pixels[pixelPos + 2] === targetColor[2] &&
-                pixels[pixelPos + 3] === targetColor[3]
-            );
-        };
-
-        var setColor = function(pixelPos) {
-            pixels[pixelPos] = fillColor[0];
-            pixels[pixelPos + 1] = fillColor[1];
-            pixels[pixelPos + 2] = fillColor[2];
-            pixels[pixelPos + 3] = fillColor[3];
-        };
-
-        while (stack.length) {
-            var newPos, x, y, pixelPos, reachLeft, reachRight;
-
-            newPos = stack.pop();
-            x = newPos[0];
-            y = newPos[1];
-
-            pixelPos = getColorIndex(x, y);
-
-            while (y-- >= 0 && isSameColor(pixelPos)) {
-                pixelPos -= width * 4;
-            }
-            pixelPos += width * 4;
-
-            reachLeft = false;
-            reachRight = false;
-
-            while (y++ < height - 1 && isSameColor(pixelPos)) {
-                setColor(pixelPos);
-
-                if (x > 0) {
-                    if (isSameColor(pixelPos - 4)) {
-                        if (!reachLeft) {
-                            stack.push([x - 1, y]);
-                            reachLeft = true;
-                        }
-                    } else if (reachLeft) {
-                        reachLeft = false;
-                    }
-                }
-
-                if (x < width - 1) {
-                    if (isSameColor(pixelPos + 4)) {
-                        if (!reachRight) {
-                            stack.push([x + 1, y]);
-                            reachRight = true;
-                        }
-                    } else if (reachRight) {
-                        reachRight = false;
-                    }
-                }
-
-                pixelPos += width * 4;
-            }
-        }
-
-        ctx.putImageData(imageData, 0, 0);
+function floodFill(startX, startY, targetColor, fillColor) {
+    if (targetColor.toString() === fillColor.toString()) {
+        console.log("El pixel de inicio ya es del color de relleno deseado.");
+        return;
     }
+
+    var stack = [[startX, startY]];
+    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var pixels = imageData.data;
+    var width = canvas.width;
+    var height = canvas.height;
+
+    var getColorIndex = function(x, y) {
+        return (y * width + x) * 4;
+    };
+
+    var isSameColor = function(pixelPos) {
+        return (
+            pixels[pixelPos] === targetColor[0] &&
+            pixels[pixelPos + 1] === targetColor[1] &&
+            pixels[pixelPos + 2] === targetColor[2] &&
+            pixels[pixelPos + 3] === targetColor[3]
+        );
+    };
+
+    var setColor = function(pixelPos) {
+        pixels[pixelPos] = fillColor[0];
+        pixels[pixelPos + 1] = fillColor[1];
+        pixels[pixelPos + 2] = fillColor[2];
+        pixels[pixelPos + 3] = fillColor[3];
+    };
+
+    while (stack.length) {
+        var newPos, x, y, pixelPos, reachLeft, reachRight;
+
+        newPos = stack.pop();
+        x = newPos[0];
+        y = newPos[1];
+
+        pixelPos = getColorIndex(x, y);
+
+        while (y-- >= 0 && isSameColor(pixelPos)) {
+            pixelPos -= width * 4;
+        }
+        pixelPos += width * 4;
+
+        reachLeft = false;
+        reachRight = false;
+
+        while (y++ < height - 1 && isSameColor(pixelPos)) {
+            setColor(pixelPos);
+
+            if (x > 0) {
+                if (isSameColor(pixelPos - 4)) {
+                    if (!reachLeft) {
+                        stack.push([x - 1, y]);
+                        reachLeft = true;
+                    }
+                } else if (reachLeft) {
+                    reachLeft = false;
+                }
+            }
+
+            if (x < width - 1) {
+                if (isSameColor(pixelPos + 4)) {
+                    if (!reachRight) {
+                        stack.push([x + 1, y]);
+                        reachRight = true;
+                    }
+                } else if (reachRight) {
+                    reachRight = false;
+                }
+            }
+
+            pixelPos += width * 4;
+        }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+}
 
     function hexToRgb(hex) {
         var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
