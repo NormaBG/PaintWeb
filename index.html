@@ -45,10 +45,21 @@
             <div class="tool" id="grosor">
                 <input id="GrosorTrazos" class="range" type="range" id="grosor" min="1" max="10" value="1">
             </div>
-            <!--Rellenar-->
-            <div class="tool" id="rellenar">
+        </div>
+        <div class="toolbox2">
+             <!--Rellenar-->
+             <div class="tool" id="rellenar">
                 <img src="img/paint.png" onclick="CambiarModo('rellenar')"  alt="rellenar">
+                <!--<input type="color" id="relleno" name="relleno">-->
+            </div>
+            <!--Relleno-->
+            <div class="tool" id="rellenoinput">
                 <input type="color" id="relleno" name="relleno">
+            </div>
+            <!--Hacer y deshacerd-->
+            <div class="tool" id="hacer">
+                <img src="img/deshacer1.png" onclick="deshacer()">
+                <img src="img/dehacer2.png" onclick="rehacer()">
             </div>
         </div>
 
@@ -56,5 +67,7 @@
     </div>
 
     <script src="index.js"></script>
+    <script src="./funciones/deshacer-rehacer.js"></script>
+    <script src="./funciones/bucle.js"></script>
 </body>
 </html>

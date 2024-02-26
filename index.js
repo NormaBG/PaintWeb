@@ -4,6 +4,9 @@ var PuntoFinal = null;
 var ctx; 
 var Modo = "";
 
+var historicoPasado = new Array();
+var historicoFuturo = new Array();
+
 function CambiarModo(NuevoModo) {
     Modo = NuevoModo;
     PuntoInicio = null;
@@ -129,8 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var targetColor = getColorAtPixel(x, y);
 
             floodFill(x, y, targetColor, fillColor);
-            
-        } else if (ModosDisp.includes(Modo)) {
+        }else if (ModosDisp.includes(Modo)) {
             if (Modo === "lapiz" || Modo === "borrar") {
                 ctx.beginPath();
                 var coordenadas = obtenerCoordenadas(event);
@@ -268,8 +270,18 @@ document.addEventListener("DOMContentLoaded", function () {
             x += xIncrement;
             y += yIncrement;
         }
-    }
 
+        historicoPasado.push({
+            tipo: "Algoritmo3", // Tipo de dibujo
+            inicio: { x: Inicio.x, y: Inicio.y }, // Coordenadas de inicio
+            final: { x: Final.x, y: Final.y }, // Coordenadas finales
+            color: ctx.strokeStyle, // Color de trazo
+            grosor: ctx.lineWidth // Grosor de trazo
+        });
+
+        console.log(historicoPasado);
+
+    }
 
     function CuadradoDibujo(Inicio, Final) {
         // Calcular el ancho y alto del cuadrado
@@ -292,6 +304,15 @@ document.addEventListener("DOMContentLoaded", function () {
         Algoritmo3({ x: cuadradoEnd.x, y: cuadradoStart.y }, cuadradoEnd);
         Algoritmo3(cuadradoEnd, { x: cuadradoStart.x, y: cuadradoEnd.y });
         Algoritmo3({ x: cuadradoStart.x, y: cuadradoEnd.y }, cuadradoStart);
+
+        historicoPasado.push({
+            tipo: "CuadradoDibujo", // Tipo de dibujo
+            inicio: { x: Inicio.x, y: Inicio.y }, // Coordenadas de inicio
+            final: { x: Final.x, y: Final.y }, // Coordenadas finales
+            color: ctx.strokeStyle, // Color de trazo
+            grosor: ctx.lineWidth // Grosor de trazo
+        });
+        console.log(historicoPasado);
     }
 
     //funcion para dibujar un circulo con bresenham
@@ -324,6 +345,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 x = x - 1;
             }
         }
+
+        historicoPasado.push({
+            tipo: "BresenhamCircle", // Tipo de dibujo
+            centro: { x: centro.x, y: centro.y }, // Coordenadas de inicio
+            radio: radio, // Coordenadas finales
+            color: ctx.strokeStyle, // Color de trazo
+            grosor: ctx.lineWidth // Grosor de trazo
+        });
+        console.log(historicoPasado);
     }
 
     function TrigonometricoCircle(grados, numLados) {
@@ -351,6 +381,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }else{
             alert("El numero de lados debe ser mayor a 2");
         }
+
+        historicoPasado.push({
+            tipo: "TrigonometricoCircle", // Tipo de dibujo
+            centro: { x: centro.x, y: centro.y }, // Coordenadas de inicio
+            radio: radio, // Coordenadas finales
+            color: ctx.strokeStyle, // Color de trazo
+            grosor: ctx.lineWidth // Grosor de trazo
+        });
+        console.log(historicoPasado);
     }
 
     function Ellipse(centro, radioX, radioY) {
@@ -382,6 +421,16 @@ document.addEventListener("DOMContentLoaded", function () {
           dibujarPuntos(centro.x, centro.y, x, y);
           y--;
         }
+
+        historicoPasado.push({
+            tipo: "Ellipse", // Tipo de dibujo
+            centro: { x: centro.x, y: centro.y }, // Coordenadas de inicio
+            radioX: radioX, // Coordenadas finales
+            radioY: radioY, // Coordenadas finales
+            color: ctx.strokeStyle, // Color de trazo
+            grosor: ctx.lineWidth // Grosor de trazo
+        });
+        console.log(historicoPasado);
       }
       
     
@@ -488,6 +537,4 @@ document.addEventListener("DOMContentLoaded", function () {
             255
         ] : null;
     }
-
-
 });
