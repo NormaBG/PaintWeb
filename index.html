@@ -61,6 +61,15 @@
                 <img id="undoButton" src="img/deshacer1.png" onclick="deshacer()">
                 <img id="redoButton" src="img/dehacer2.png" onclick="rehacer()">
             </div>
+            <!--Guardar-->
+            <div class="tool" id="guardar">
+                <img id="guardarimagen" src="img/guardar.png" onclick="guardarImagen()">
+            </div>
+            <!--Importar-->
+            <div class="tool" id="importar">
+                <input type="file" id="inputArchivo" accept=".json">
+                <button id="cargarImagen">Cargar Imagen</button>
+            </div>
         </div>
 
         <canvas id="myCanvas" class="canvas"></canvas>
@@ -69,5 +78,7 @@
     <script src="index.js"></script>
     <script src="./funciones/deshacer-rehacer.js"></script>
     <script src="./funciones/bucle.js"></script>
+    <script src="./funciones/guardar.js"></script>
+    <script src="./funciones/importar.js"></script>
 </body>
 </html>
