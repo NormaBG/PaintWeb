@@ -12,8 +12,6 @@ function CambiarModo(NuevoModo) {
     PuntoInicio = null;
     PuntoFinal = null;
 }
-
-
 // CANVAS
 document.addEventListener("DOMContentLoaded", function () {
     var canvas = document.getElementById("myCanvas");
@@ -279,7 +277,8 @@ document.addEventListener("DOMContentLoaded", function () {
             grosor: ctx.lineWidth // Grosor de trazo
         });
 
-        console.log(historicoPasado);
+        console.log("Lengt: ",historicoPasado.length);
+        console.log("Pila: ", historicoPasado);
 
     }
 
