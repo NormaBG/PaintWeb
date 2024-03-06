@@ -130,6 +130,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 PuntoInicio = null;
                 PuntoFinal = null;
             }
+        }else if(Modo === "Trapecio"){
+            if (!PuntoInicio) {
+                PuntoInicio = obtenerCoordenadas(event);
+            } else {
+                PuntoFinal = obtenerCoordenadas(event);
+                var baseSuperior = 100;
+                TrapecioDibujo(PuntoInicio, PuntoFinal, baseSuperior);
+                PuntoInicio = null;
+                PuntoFinal = null;
+            }
+
         }else if(Modo === "rellenar"){
 
             var x = event.offsetX;
@@ -475,8 +486,25 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(historicoPasado);
     }
     
-      
+    //trapecio
+
+    function TrapecioDibujo(Inicio, Final, baseSuperior) {
+        // Dibujar los lados del trapecio
+        Algoritmo3(Inicio, { x: Inicio.x + baseSuperior, y: Inicio.y });
+        Algoritmo3({ x: Inicio.x + baseSuperior, y: Inicio.y }, { x: Final.x - baseSuperior, y: Final.y });
+        Algoritmo3({ x: Final.x - baseSuperior, y: Final.y }, Final);
+        Algoritmo3(Final, Inicio);
     
+        historicoPasado.push({
+            tipo: "TrapecioDibujo", // Tipo de dibujo
+            inicio: { x: Inicio.x, y: Inicio.y }, // Coordenadas de inicio
+            final: { x: Final.x, y: Final.y }, // Coordenadas finales
+            baseSuperior: baseSuperior, // Longitud de la base superior
+            color: ctx.strokeStyle, // Color de trazo
+            grosor: ctx.lineWidth // Grosor de trazo
+        });
+        console.log(historicoPasado);
+    }    
 
     //funcion para rellenar figuras
     function getColorAtPixel(x, y) {
@@ -581,3 +609,5 @@ document.addEventListener("DOMContentLoaded", function () {
         ] : null;
     }
 });
+
+
