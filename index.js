@@ -121,6 +121,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 PuntoInicio = null;
                 PuntoFinal = null;
             }
+        }else if(Modo ==="Rectangulo"){
+            if (!PuntoInicio) {
+                PuntoInicio = obtenerCoordenadas(event);
+            } else {
+                PuntoFinal = obtenerCoordenadas(event);
+                RectanguloDibujo(PuntoInicio, PuntoFinal);
+                PuntoInicio = null;
+                PuntoFinal = null;
+            }
         }else if(Modo === "rellenar"){
 
             var x = event.offsetX;
@@ -431,6 +440,41 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         console.log(historicoPasado);
       }
+
+      //funcion para el rectangulo
+
+      function RectanguloDibujo(Inicio, Final) {
+        // Calcular el ancho y alto del rectángulo
+        var width = Math.abs(Final.x - Inicio.x);
+        var height = Math.abs(Final.y - Inicio.y);
+    
+        // Determinar el punto de inicio y el punto final para el rectángulo
+        var rectStart = {
+            x: (Final.x > Inicio.x) ? Inicio.x : Final.x,
+            y: (Final.y > Inicio.y) ? Inicio.y : Final.y
+        };
+    
+        var rectEnd = {
+            x: rectStart.x + width,
+            y: rectStart.y + height
+        };
+    
+        // Dibujar los lados del rectángulo
+        Algoritmo3(rectStart, { x: rectEnd.x, y: rectStart.y });
+        Algoritmo3({ x: rectEnd.x, y: rectStart.y }, rectEnd);
+        Algoritmo3(rectEnd, { x: rectStart.x, y: rectEnd.y });
+        Algoritmo3({ x: rectStart.x, y: rectEnd.y }, rectStart);
+    
+        historicoPasado.push({
+            tipo: "RectanguloDibujo", // Tipo de dibujo
+            inicio: { x: Inicio.x, y: Inicio.y }, // Coordenadas de inicio
+            final: { x: Final.x, y: Final.y }, // Coordenadas finales
+            color: ctx.strokeStyle, // Color de trazo
+            grosor: ctx.lineWidth // Grosor de trazo
+        });
+        console.log(historicoPasado);
+    }
+    
       
     
 
